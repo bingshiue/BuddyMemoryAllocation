@@ -71,6 +71,7 @@ _mark_parent(struct buddy * self, int index) {
 
 int 
 buddy_alloc(struct buddy * self , int s) {
+  char str[64];// For Print Debug Strings
   int size;
   if (s==0) {
     size = 1;
@@ -89,10 +90,12 @@ buddy_alloc(struct buddy * self , int s) {
     if (size == length) {
       if (self->tree[index] == NODE_UNUSED) {
         self->tree[index] = NODE_USED;
+        printf("\n ### tree[%d]=NODE_USED , length=size=%d ### \n", index, length);
         _mark_parent(self, index);
         return _index_offset(index, level, self->level);
       }
-    } else {
+    } 
+    else {
       // size < length
       switch (self->tree[index]) {
       case NODE_USED:
@@ -101,6 +104,7 @@ buddy_alloc(struct buddy * self , int s) {
       case NODE_UNUSED:
         // split first
         self->tree[index] = NODE_SPLIT;
+        printf("\n ### tree[%d]=NODE_SPLIT , length=%d ### \n", index, length);
         self->tree[index*2+1] = NODE_UNUSED;
         self->tree[index*2+2] = NODE_UNUSED;
       default:
